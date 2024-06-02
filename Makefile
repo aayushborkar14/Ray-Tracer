@@ -1,13 +1,11 @@
 objects = vec3.o color.o progress_bar.o
-CXX = g++
 
 all: out.ppm
 
-main.exe: $(objects) main.cpp
-	g++ $^ -o $@
+main: $(objects)
 
-out.ppm: main.exe
-	.\main.exe > $@
+out.ppm: main
+	.\main > $@
 
 clean:
 	-rm $(objects) out.ppm
