@@ -23,7 +23,7 @@ void ProgressBar::update(float new_progress) {
         else
             out << " ";
     }
-    out << "] " << int(progress * 100.0) << " %\r";
+    out << "] " << static_cast<int>(progress * 100.0) << " %\r";
     out.flush();
 }
 

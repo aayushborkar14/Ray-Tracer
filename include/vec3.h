@@ -45,4 +45,6 @@ vec3 cross(const vec3 &u, const vec3 &v);
 
 vec3 unit_vector(const vec3 &v);
 
+using point3 = vec3;
+
 #endif

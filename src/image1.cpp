@@ -13,11 +13,12 @@ int main() {
               << "255\n";
     for (int i = 0; i < IMAGE_HEIGHT; i++) {
         for (int j = 0; j < IMAGE_WIDTH; j++) {
-            auto pixel_color = color(double(j) / (IMAGE_WIDTH - 1),
-                                     double(i) / (IMAGE_HEIGHT - 1), 0.25);
+            auto pixel_color =
+                color(static_cast<double>(j) / (IMAGE_WIDTH - 1),
+                      static_cast<double>(i) / (IMAGE_HEIGHT - 1), 0.25);
             write_color(std::cout, pixel_color);
         }
-        bar.update((float(i) + 1) / IMAGE_HEIGHT);
+        bar.update((static_cast<float>(i) + 1) / IMAGE_HEIGHT);
     }
     bar.completed();
 }
