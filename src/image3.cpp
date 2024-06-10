@@ -20,7 +20,7 @@ color ray_color(const ray &r) {
         return color(0.36, 0.08, 0.55);
     vec3 unit_direction = unit_vector(r.direction());
     double t = 0.5 * (unit_direction.y + 1.0);
-    return (1.0 - t) * color(0.12, 0.15, 0.34) + t * color(0.23, 0.49, 0.44);
+    return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
 }
 
 int main() {
