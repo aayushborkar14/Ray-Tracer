@@ -7,11 +7,11 @@
 #include <iostream>
 
 double hit_sphere(const point3 &center, double radius, const ray &r) {
-    point3 Q = r.origin();
+    vec3 oc = center - r.origin();
     vec3 d = r.direction();
     double a = dot(d, d);
-    double b = -2.0 * dot(d, center - Q);
-    double c = dot(center - Q, center - Q) - radius * radius;
+    double b = -2.0 * dot(d, oc);
+    double c = dot(oc, oc) - radius * radius;
     double discriminant = b * b - 4 * a * c;
     if (discriminant < 0)
         return -1.0;
