@@ -1,4 +1,5 @@
 #include "vec3.h"
+#include "utils.h"
 #include <cmath>
 #include <iostream>
 
@@ -35,6 +36,15 @@ vec3 &vec3::operator/=(const vec3 &v) {
 double vec3::length() const { return std::sqrt(length_squared()); }
 
 double vec3::length_squared() const { return x * x + y * y + z * z; }
+
+vec3 vec3::random() {
+    return vec3(random_double(), random_double(), random_double());
+}
+
+vec3 vec3::rand_range(double min, double max) {
+    return vec3(::rand_range(min, max), ::rand_range(min, max),
+                ::rand_range(min, max));
+}
 
 vec3 operator+(const vec3 &u, const vec3 &v) {
     return vec3(u.x + v.x, u.y + v.y, u.z + v.z);

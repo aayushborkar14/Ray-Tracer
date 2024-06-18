@@ -23,6 +23,10 @@ class vec3 {
     double length() const;
 
     double length_squared() const;
+
+    static vec3 random();
+
+    static vec3 rand_range(double min, double max);
 };
 
 vec3 operator+(const vec3 &u, const vec3 &v);

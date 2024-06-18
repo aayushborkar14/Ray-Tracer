@@ -2,6 +2,7 @@
 #define INTERVAL_H
 
 #include "utils.h"
+#include <algorithm>
 
 class interval {
   public:
@@ -21,10 +22,12 @@ class interval {
 
     bool surrounds(double y) const { return min <= y && y <= max; }
 
+    double clamp(double x) const { return std::clamp(x, min, max); }
+
     static const interval empty, universe;
 };
 
-const interval interval::empty{+infinity, -infinity};
-const interval interval::universe{-infinity, infinity};
+inline const interval interval::empty{+infinity, -infinity};
+inline const interval interval::universe{-infinity, infinity};
 
 #endif
