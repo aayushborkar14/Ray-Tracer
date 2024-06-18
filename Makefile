@@ -1,21 +1,22 @@
 BUILD_DIR := ./bin
 SRC_DIR := ./src
 LIB_DIR := ./lib
+IMAGE_DIR := ./images
 LIBS := $(wildcard $(LIB_DIR)/*.cpp)
 LIB_OBJS := $(patsubst $(LIB_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(LIBS))
 
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 SRC_OBJS := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 IMAGES := $(patsubst $(SRC_DIR)/image%.cpp, image%, $(SRCS))
-PPMS := $(IMAGES:%=%.ppm)
+PPMS := $(patsubst image%, $(IMAGE_DIR)/image%.ppm, $(IMAGES))
 
-CXXFLAGS := -Iinclude
+CXXFLAGS := -Iinclude -std=c++20
 
 all: $(PPMS)
 
-$(IMAGES): %: %.ppm
+$(IMAGES): %: $(IMAGE_DIR)/%.ppm
 
-%.ppm: $(BUILD_DIR)/%.exe
+$(IMAGE_DIR)/%.ppm: $(BUILD_DIR)/%.exe | $(IMAGE_DIR)
 	.\$(subst /,\,$<) > $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
@@ -30,8 +31,11 @@ $(BUILD_DIR)/%.exe: $(BUILD_DIR)/%.o $(LIB_OBJS) | $(BUILD_DIR)
 $(BUILD_DIR):
 	mkdir $(subst /,\,$(BUILD_DIR))
 
+$(IMAGE_DIR):
+	mkdir $(subst /,\,$(IMAGE_DIR))
+
 cleanppm:
-	rm -f *.ppm
+	rm -f $(IMAGE_DIR)/*.ppm
 
 cleanlib:
 	rm -f $(LIB_OBJS)
