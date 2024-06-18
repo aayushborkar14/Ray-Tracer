@@ -4,17 +4,17 @@
 #include "progress_bar.h"
 #include "ray.h"
 #include "sphere.h"
+#include "utils.h"
 #include "vec3.h"
 #include <algorithm>
 #include <iostream>
-#include <limits>
 #include <memory>
+
 
 color ray_color(const ray &r, const hittable &world) {
     hit_record rec;
-    if (world.hit(r, 0, std::numeric_limits<double>::infinity(), rec)) {
+    if (world.hit(r, 0, infinity, rec))
         return 0.5 * (rec.normal + color(1, 1, 1));
-    }
 
     vec3 unit_direction = unit_vector(r.direction());
     double t = 0.5 * (unit_direction.y + 1.0);
