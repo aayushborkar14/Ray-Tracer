@@ -12,7 +12,7 @@ using std::shared_ptr;
 using std::sqrt;
 using std::numbers::pi;
 
-const double infinity = std::numeric_limits<double>::infinity();
+constexpr double infinity = std::numeric_limits<double>::infinity();
 
 inline double degrees_to_radians(double degrees) {
     return degrees * pi / 180.0;

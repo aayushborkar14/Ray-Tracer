@@ -80,3 +80,20 @@ vec3 cross(const vec3 &u, const vec3 &v) {
 }
 
 vec3 unit_vector(const vec3 &v) { return v / v.length(); }
+
+vec3 random_in_unit_sphere() {
+    while (true) {
+        vec3 p = vec3::rand_range(-1, 1);
+        if (p.length_squared() < 1 && p.length_squared() > 0.1)
+            return p;
+    }
+}
+
+vec3 random_unit_vector() { return unit_vector(random_in_unit_sphere()); }
+
+vec3 random_on_hemisphere(const vec3 &normal) {
+    vec3 random_on_sphere = random_unit_vector();
+    if (dot(random_on_sphere, normal) > 0.0)
+        return random_on_sphere;
+    return -random_on_sphere;
+}
