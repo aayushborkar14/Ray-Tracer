@@ -37,6 +37,11 @@ double vec3::length() const { return std::sqrt(length_squared()); }
 
 double vec3::length_squared() const { return x * x + y * y + z * z; }
 
+bool vec3::near_zero() const {
+    const double s = 1e-8;
+    return (fabs(x) < s) && (fabs(y) < s) && (fabs(z) < s);
+}
+
 vec3 vec3::random() {
     return {random_double(), random_double(), random_double()};
 }
@@ -95,3 +100,5 @@ vec3 random_on_hemisphere(const vec3 &normal) {
         return random_on_sphere;
     return -random_on_sphere;
 }
+
+vec3 reflect(const vec3 &v, const vec3 &n) { return v - 2 * dot(v, n) * n; }

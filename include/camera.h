@@ -3,6 +3,7 @@
 
 #include "color.h"
 #include "hittable.h"
+#include "material.h"
 #include "progress_bar.h"
 #include "utils.h"
 #include "vec3.h"
@@ -53,8 +54,11 @@ class camera {
         hit_record rec;
 
         if (world.hit(r, {0.001, infinity}, rec)) {
-            vec3 direction = rec.normal + random_unit_vector();
-            return 0.5 * ray_color({rec.p, direction}, depth - 1, world);
+            ray scattered{};
+            color attenuation{};
+            if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+                return attenuation * ray_color(scattered, depth - 1, world);
+            return {0, 0, 0};
         }
 
         vec3 unit_direction = unit_vector(r.direction());
