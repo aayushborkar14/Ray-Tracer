@@ -24,6 +24,8 @@ class vec3 {
 
     double length_squared() const;
 
+    bool near_zero() const;
+
     static vec3 random();
 
     static vec3 rand_range(double min, double max);
@@ -54,6 +56,8 @@ vec3 random_in_unit_sphere();
 vec3 random_unit_vector();
 
 vec3 random_on_hemisphere(const vec3 &normal);
+
+vec3 reflect(const vec3 &v, const vec3 &n);
 
 using point3 = vec3;
 

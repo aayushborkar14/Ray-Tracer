@@ -3,6 +3,9 @@
 
 #include "interval.h"
 #include "ray.h"
+#include "utils.h"
+
+class material;
 
 class hit_record {
   public:
@@ -10,6 +13,7 @@ class hit_record {
     vec3 normal;
     double t;
     bool front_face;
+    shared_ptr<material> mat_ptr;
 
     void set_face_normal(const ray &r, const vec3 &outward_normal) {
         front_face = dot(r.direction(), outward_normal) < 0;
