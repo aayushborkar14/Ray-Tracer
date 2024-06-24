@@ -59,6 +59,8 @@ vec3 random_on_hemisphere(const vec3 &normal);
 
 vec3 reflect(const vec3 &v, const vec3 &n);
 
+vec3 refract(const vec3 &v, const vec3 &n, double eta_ratio);
+
 using point3 = vec3;
 
 #endif

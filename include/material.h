@@ -58,4 +58,22 @@ class metal : public material {
     }
 };
 
+class dielectric : public material {
+  private:
+    double refractive_index;
+
+  public:
+    dielectric(double refractive_index) : refractive_index(refractive_index) {}
+
+    bool scatter(const ray &r_in, const hit_record &rec, color &attenuation,
+                 ray &scattered) const override {
+        double ri =
+            rec.front_face ? (1.0 / refractive_index) : refractive_index;
+        vec3 refracted = refract(unit_vector(r_in.direction()), rec.normal, ri);
+        scattered = {rec.p, refracted};
+        attenuation = {1.0, 1.0, 1.0};
+        return true;
+    }
+};
+
 #endif
