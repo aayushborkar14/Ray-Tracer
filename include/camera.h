@@ -7,7 +7,6 @@
 #include "progress_bar.h"
 #include "utils.h"
 #include "vec3.h"
-#include <algorithm>
 #include <iostream>
 
 class camera {
@@ -20,8 +19,7 @@ class camera {
     double pixel_samples_scale;
 
     void initialize() {
-        image_height =
-            std::max(static_cast<int>(image_width / aspect_ratio), 1);
+        image_height = max(static_cast<int>(image_width / aspect_ratio), 1);
 
         center = {0, 0, 0};
 

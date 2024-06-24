@@ -45,7 +45,7 @@ class metal : public material {
 
   public:
     metal(const color &a, double fuzz = 0)
-        : albedo(a), fuzz_factor(fuzz < 1 ? fuzz : 1) {}
+        : albedo(a), fuzz_factor(min(fuzz, 1.0)) {}
 
     bool scatter(const ray &r_in, const hit_record &rec, color &attenuation,
                  ray &scattered) const override {

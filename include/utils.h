@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <limits>
@@ -8,6 +9,8 @@
 #include <numbers>
 
 using std::make_shared;
+using std::max;
+using std::min;
 using std::shared_ptr;
 using std::sqrt;
 using std::numbers::pi;
