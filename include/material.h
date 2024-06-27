@@ -62,6 +62,12 @@ class dielectric : public material {
   private:
     double refractive_index;
 
+    static double reflectance(double cos_i, double ri) {
+        double r0 = (1 - ri) / (1 + ri);
+        r0 *= r0;
+        return r0 + (1 - r0) * pow((1 - cos_i), 5);
+    }
+
   public:
     dielectric(double refractive_index) : refractive_index(refractive_index) {}
 
@@ -75,7 +81,7 @@ class dielectric : public material {
         double sin_i = sqrt(1.0 - cos_i * cos_i);
 
         vec3 dir;
-        if (sin_i * ri > 1.0)
+        if (sin_i * ri > 1.0 || reflectance(cos_i, ri) > random_double())
             dir = reflect(unit_direction, rec.normal);
         else
             dir = refract(unit_direction, rec.normal, ri);
