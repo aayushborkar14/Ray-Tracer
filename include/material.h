@@ -69,8 +69,17 @@ class dielectric : public material {
                  ray &scattered) const override {
         double ri =
             rec.front_face ? (1.0 / refractive_index) : refractive_index;
-        vec3 refracted = refract(unit_vector(r_in.direction()), rec.normal, ri);
-        scattered = {rec.p, refracted};
+
+        vec3 unit_direction = unit_vector(r_in.direction());
+        double cos_i = min(dot(-unit_direction, rec.normal), 1.0);
+        double sin_i = sqrt(1.0 - cos_i * cos_i);
+
+        vec3 dir;
+        if (sin_i * ri > 1.0)
+            dir = reflect(unit_direction, rec.normal);
+        else
+            dir = refract(unit_direction, rec.normal, ri);
+        scattered = {rec.p, dir};
         attenuation = {1.0, 1.0, 1.0};
         return true;
     }
