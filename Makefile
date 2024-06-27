@@ -16,8 +16,8 @@ all: $(PPMS)
 
 $(IMAGES): %: $(IMAGE_DIR)/%.ppm
 
-$(IMAGE_DIR)/%.ppm: $(BUILD_DIR)/%.exe | $(IMAGE_DIR)
-	.\$(subst /,\,$<) > $@
+$(IMAGE_DIR)/%.ppm: $(BUILD_DIR)/% | $(IMAGE_DIR)
+	$< > $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -25,14 +25,14 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: $(LIB_DIR)/%.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.exe: $(BUILD_DIR)/%.o $(LIB_OBJS) | $(BUILD_DIR)
+$(BUILD_DIR)/%: $(BUILD_DIR)/%.o $(LIB_OBJS) | $(BUILD_DIR)
 	$(CXX) $^ -o $@
 
 $(BUILD_DIR):
-	mkdir $(subst /,\,$(BUILD_DIR))
+	mkdir $(BUILD_DIR)
 
 $(IMAGE_DIR):
-	mkdir $(subst /,\,$(IMAGE_DIR))
+	mkdir $(IMAGE_DIR)
 
 cleanppm:
 	rm -f $(IMAGE_DIR)/*.ppm
@@ -42,7 +42,7 @@ cleanlib:
 
 cleansrc:
 	rm -f $(SRC_OBJS)
-	rm -f $(BUILD_DIR)/*.exe
+	rm -f $(BUILD_DIR)/*
 
 clean: cleanppm cleanlib cleansrc
 
