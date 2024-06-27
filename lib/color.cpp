@@ -18,9 +18,9 @@ void write_color(std::ostream &out, const color &pixel_color) {
     b = linear_to_gamma(b);
 
     static const interval intensity{0.0, 0.999};
-    int rbyte = static_cast<int>(256 * intensity.clamp(r));
-    int gbyte = static_cast<int>(256 * intensity.clamp(g));
-    int bbyte = static_cast<int>(256 * intensity.clamp(b));
+    unsigned char rbyte = static_cast<int>(256 * intensity.clamp(r));
+    unsigned char gbyte = static_cast<int>(256 * intensity.clamp(g));
+    unsigned char bbyte = static_cast<int>(256 * intensity.clamp(b));
 
-    out << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
+    out << rbyte << gbyte << bbyte;
 }
