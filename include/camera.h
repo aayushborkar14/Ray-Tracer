@@ -25,7 +25,9 @@ class camera {
 
         // Viewport dimensions
         double focal_length = 1.0;
-        double viewport_height = 2.0;
+        double theta = degrees_to_radians(vfov);
+        double h = tan(theta / 2);
+        double viewport_height = 2.0 * h * focal_length;
         double viewport_width =
             viewport_height * static_cast<double>(image_width) / image_height;
 
@@ -80,6 +82,7 @@ class camera {
     int image_width = 100;
     int samples_per_pixel = 10;
     int max_depth = 10;
+    double vfov = 90;
 
     void render(const hittable &world) {
         initialize();
