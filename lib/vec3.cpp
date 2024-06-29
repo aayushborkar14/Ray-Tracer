@@ -78,7 +78,7 @@ double dot(const vec3 &u, const vec3 &v) {
 }
 
 vec3 cross(const vec3 &u, const vec3 &v) {
-    return {u.y * v.z - u.z - v.y, u.z * v.x - u.x * v.z,
+    return {u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z,
             u.x * v.y - u.y * v.x};
 }
 
