@@ -17,30 +17,36 @@ class camera {
     vec3 pixel_delta_u;
     vec3 pixel_delta_v;
     double pixel_samples_scale;
+    vec3 u, v, w;
 
     void initialize() {
         image_height = max(static_cast<int>(image_width / aspect_ratio), 1);
 
-        center = {0, 0, 0};
+        center = lookfrom;
 
         // Viewport dimensions
-        double focal_length = 1.0;
+        double focal_length = (lookfrom - lookat).length();
         double theta = degrees_to_radians(vfov);
         double h = tan(theta / 2);
         double viewport_height = 2.0 * h * focal_length;
         double viewport_width =
             viewport_height * static_cast<double>(image_width) / image_height;
 
+        // Calculate u, v, w
+        w = unit_vector(lookfrom - lookat);
+        u = unit_vector(cross(vup, w));
+        v = unit_vector(cross(w, u));
+
         // Horizontal and vertical vectors of viewport
-        vec3 viewport_u{viewport_width, 0, 0};
-        vec3 viewport_v{0, -viewport_height, 0};
+        vec3 viewport_u{u * viewport_width};
+        vec3 viewport_v{-v * viewport_height};
 
         // Pixel delta vectors
         pixel_delta_u = viewport_u / image_width;
         pixel_delta_v = viewport_v / image_height;
 
         point3 viewport_upper_left =
-            center - viewport_u / 2 - viewport_v / 2 - vec3(0, 0, focal_length);
+            center - viewport_u / 2 - viewport_v / 2 - w * focal_length;
         pixel00_loc =
             viewport_upper_left + pixel_delta_u / 2 + pixel_delta_v / 2;
 
@@ -83,6 +89,10 @@ class camera {
     int samples_per_pixel = 10;
     int max_depth = 10;
     double vfov = 90;
+
+    point3 lookfrom = {0, 0, 0};
+    point3 lookat = {0, 0, -1};
+    vec3 vup = {0, 1, 0};
 
     void render(const hittable &world) {
         initialize();
