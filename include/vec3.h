@@ -51,6 +51,8 @@ vec3 cross(const vec3 &u, const vec3 &v);
 
 vec3 unit_vector(const vec3 &v);
 
+vec3 random_in_unit_disk();
+
 vec3 random_in_unit_sphere();
 
 vec3 random_unit_vector();

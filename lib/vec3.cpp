@@ -84,6 +84,14 @@ vec3 cross(const vec3 &u, const vec3 &v) {
 
 vec3 unit_vector(const vec3 &v) { return v / v.length(); }
 
+vec3 random_in_unit_disk() {
+    while (true) {
+        vec3 p{rand_range(-1, 1), rand_range(-1, 1), 0};
+        if (p.length_squared() < 1)
+            return p;
+    }
+}
+
 vec3 random_in_unit_sphere() {
     while (true) {
         vec3 p = vec3::rand_range(-1, 1);

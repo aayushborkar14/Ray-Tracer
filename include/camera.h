@@ -12,12 +12,12 @@
 class camera {
   private:
     int image_height;
-    point3 center;
-    point3 pixel00_loc;
-    vec3 pixel_delta_u;
-    vec3 pixel_delta_v;
+    point3 center, pixel00_loc;
+    vec3 pixel_delta_u, pixel_delta_v;
     double pixel_samples_scale;
     vec3 u, v, w;
+
+    vec3 defocus_disk_u, defocus_disk_v;
 
     void initialize() {
         image_height = max(static_cast<int>(image_width / aspect_ratio), 1);
@@ -25,10 +25,9 @@ class camera {
         center = lookfrom;
 
         // Viewport dimensions
-        double focal_length = (lookfrom - lookat).length();
         double theta = degrees_to_radians(vfov);
         double h = tan(theta / 2);
-        double viewport_height = 2.0 * h * focal_length;
+        double viewport_height = 2.0 * h * focus_dist;
         double viewport_width =
             viewport_height * static_cast<double>(image_width) / image_height;
 
@@ -46,11 +45,16 @@ class camera {
         pixel_delta_v = viewport_v / image_height;
 
         point3 viewport_upper_left =
-            center - viewport_u / 2 - viewport_v / 2 - w * focal_length;
+            center - viewport_u / 2 - viewport_v / 2 - w * focus_dist;
         pixel00_loc =
             viewport_upper_left + pixel_delta_u / 2 + pixel_delta_v / 2;
 
         pixel_samples_scale = 1.0 / samples_per_pixel;
+
+        double defocus_radius =
+            focus_dist * tan(degrees_to_radians(defocus_angle / 2));
+        defocus_disk_u = u * defocus_radius;
+        defocus_disk_v = v * defocus_radius;
     }
 
     color ray_color(const ray &r, int depth, const hittable &world) const {
@@ -76,11 +80,19 @@ class camera {
         return {random_double() - 0.5, random_double() - 0.5, 0};
     }
 
+    point3 defocus_disk_sample() const {
+        vec3 offset = random_in_unit_disk();
+        return center + (offset.x * defocus_disk_u) +
+               (offset.y * defocus_disk_v);
+    }
+
     ray get_ray(int i, int j) const {
         vec3 offset = sample_square();
         point3 pixel_sample = pixel00_loc + pixel_delta_u * (i + offset.x) +
                               pixel_delta_v * (j + offset.y);
-        return {center, pixel_sample - center};
+        point3 ray_origin =
+            (defocus_angle <= 0) ? center : defocus_disk_sample();
+        return {ray_origin, pixel_sample - ray_origin};
     }
 
   public:
@@ -93,6 +105,9 @@ class camera {
     point3 lookfrom = {0, 0, 0};
     point3 lookat = {0, 0, -1};
     vec3 vup = {0, 1, 0};
+
+    double defocus_angle = 0;
+    double focus_dist = 10;
 
     void render(const hittable &world) {
         initialize();
