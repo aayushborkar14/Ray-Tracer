@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "vec3.h"
 #include <iostream>
+#include <vector>
 
 class camera {
   private:
@@ -109,25 +110,50 @@ class camera {
     double defocus_angle = 0;
     double focus_dist = 10;
 
+    int num_threads = 1;
+
     void render(const hittable &world) {
         initialize();
         // Setup ProgressBar on std::clog
         ProgressBar bar(std::clog);
-
         std::cout << "P6\n" << image_width << " " << image_height << "\n255\n";
 
-        for (int j = 0; j < image_height; j++) {
-            for (int i = 0; i < image_width; i++) {
-                color pixel_color{0, 0, 0};
-                for (int sample = 0; sample < samples_per_pixel; sample++) {
-                    ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, max_depth, world);
+        if (num_threads > 1) {
+            std::vector<std::vector<color>> image(
+                image_height, std::vector<color>(image_width));
+
+            int rows_done{};
+#pragma omp parallel for num_threads(num_threads)
+            for (int j = 0; j < image_height; j++) {
+                for (int i = 0; i < image_width; i++) {
+                    color pixel_color{0, 0, 0};
+                    for (int sample = 0; sample < samples_per_pixel; sample++) {
+                        ray r = get_ray(i, j);
+                        pixel_color += ray_color(r, max_depth, world);
+                    }
+                    image.at(j).at(i) = pixel_color * pixel_samples_scale;
                 }
-                write_color(std::cout, pixel_color * pixel_samples_scale);
+                bar.update(static_cast<float>(++rows_done) / image_height);
             }
-            bar.update((static_cast<float>(j) + 1) / image_height);
+
+            for (int j = 0; j < image_height; j++)
+                for (int i = 0; i < image_width; i++)
+                    write_color(std::cout, image.at(j).at(i));
+
+            bar.completed();
+        } else {
+            for (int j = 0; j < image_height; j++) {
+                for (int i = 0; i < image_width; i++) {
+                    color pixel_color{0, 0, 0};
+                    for (int sample = 0; sample < samples_per_pixel; sample++) {
+                        ray r = get_ray(i, j);
+                        pixel_color += ray_color(r, max_depth, world);
+                    }
+                    write_color(std::cout, pixel_color * pixel_samples_scale);
+                }
+                bar.update((static_cast<float>(j) + 1) / image_height);
+            }
         }
-        bar.completed();
     };
 };
 

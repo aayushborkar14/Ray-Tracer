@@ -10,7 +10,9 @@ SRC_OBJS := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 IMAGES := $(patsubst $(SRC_DIR)/image%.cpp, image%, $(SRCS))
 PPMS := $(patsubst image%, $(IMAGE_DIR)/image%.ppm, $(IMAGES))
 
-CXXFLAGS := -Iinclude -std=c++20
+CXX := g++-13
+CXXFLAGS := -Iinclude -std=c++20 -fopenmp
+LDFLAGS := -fopenmp
 
 all: $(PPMS)
 
@@ -26,7 +28,7 @@ $(BUILD_DIR)/%.o: $(LIB_DIR)/%.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%: $(BUILD_DIR)/%.o $(LIB_OBJS) | $(BUILD_DIR)
-	$(CXX) $^ -o $@
+	$(CXX) $^ $(LDFLAGS) -o $@
 
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
